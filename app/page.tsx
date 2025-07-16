@@ -7,6 +7,7 @@ import { eq } from "drizzle-orm";
 import { tasks } from "@/db/schema";
 import { deleteTask } from "./actions";
 import SignOut from "./components/sign-out";
+import { SignInResend } from "./components/sign-in-resend";
 
 export default async function Home() {
   const session = await auth();
@@ -15,8 +16,9 @@ export default async function Home() {
     console.log("session", session);
     return (
       <main className="max-w-md mx-auto p-6">
-        <header className="flex justify-between items-center mb-12">
+        <header className="flex justify-between items-center gap-4 mb-12">
           <SignIn />
+          <SignInResend />
         </header>
         <p className="text-center text-gray-500">
           Please sign in to view your tasks.
