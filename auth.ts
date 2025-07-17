@@ -13,6 +13,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Resend({
       from: "contact@loorbach.dev",
     }),
-    Credentials,
+    Credentials({}),
   ],
 });
