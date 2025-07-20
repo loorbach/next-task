@@ -1,4 +1,3 @@
-import SignIn from "./components/sign-in";
 import { auth } from "@/auth";
 import Image from "next/image";
 import { addTask } from "./actions";
@@ -6,28 +5,14 @@ import { db } from "@/db/client";
 import { eq } from "drizzle-orm";
 import { tasks } from "@/db/schema";
 import { deleteTask } from "./actions";
-import SignOut from "./components/sign-out";
-import { SignInResend } from "./components/sign-in-resend";
+import { SignOut } from "@/components/ui/signout-button";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth();
-  console.log("session", session);
-  if (!session?.user) {
-    console.log("session", session);
-    return (
-      <main className="max-w-md mx-auto p-6">
-        <header className="flex justify-between items-center gap-4 mb-12">
-          <SignIn />
-          <SignInResend />
-        </header>
-        <p className="text-center text-gray-500">
-          Please sign in to view your tasks.
-        </p>
-      </main>
-    );
-  }
+
+  if (!session) redirect("/login");
   if (!session.user?.id) {
-    console.log("session:", session);
     throw new Error("User ID is undefined");
   }
 
@@ -40,23 +25,17 @@ export default async function Home() {
   return (
     <main className="max-w-md mx-auto p-6">
       <header className="flex justify-between items-center mb-12">
-        {session ? (
-          <>
-            <div className="flex items-center gap-4">
-              <p>{session.user.name}</p>
-              <Image
-                src={session.user.image ?? "/placeholder.png"}
-                alt={session.user.name ?? "User avatar"}
-                width={40}
-                height={40}
-                className="rounded-full"
-              />
-            </div>
-            <SignOut />
-          </>
-        ) : (
-          <SignIn />
-        )}
+        <div className="flex items-center gap-4">
+          <p>{session.user.name}</p>
+          <Image
+            src={session.user.image ?? "/placeholder.png"}
+            alt={session.user.name ?? "User avatar"}
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+        </div>
+        <SignOut />
       </header>
       <form
         action={async (formData) => {
